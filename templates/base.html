@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search tool application</title>
+    </head>
+
+    <body>
+        <h1>Search tool application</h1>
+        <div id="base-header">
+            {% if user.is_authenticated %}
+            <p>Welcome, {{ user.first_name.title }} !</p>
+                    {% if user.is_staff %}
+                            <p>You can login as <a href="{% url 'admin:index' %}">Admin</a></p>
+                    {% endif %}
+                    <p><a href="{% url 'logout' %}">Logout?</a></p>
+            {% endif %}
+        </div>
+        <hr style="height:2px;border:none;color:#333;background-color:#333;" />
+        <div id="base-content">
+                {% block content %}{% endblock content %}
+        </div>
+    </body>
+</html>

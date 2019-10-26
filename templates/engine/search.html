@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Search your query{% endblock %}
+{% block header %} {% endblock %}
+{% block content %}
+  <div id="container" data-url="{% url 'home' %}"></div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $.ajax({
+      url: $("#container").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container", data);
+      }
+    });
+  </script>
+  <form action="." name="search" method="get">{% csrf_token %}
+  Enter your text here<input name="q" type="text" width="50"></input>
+  <button type="submit">Search</button>
+  </form>
+{% endblock %}
