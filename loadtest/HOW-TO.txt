@@ -1,0 +1,14 @@
+INSTALLATION
+============
+you can install it locally using the following command
+    pip install locustio
+After this you can RUN the command from RUN section and look for localhost:8089 in browser.
+
+RUN INSTRUCTIONS
+================
+To run the locust test run the following command for stage
+
+locust -f locustfile.py --host=http://localhost:8080
+
+~
+@piyusg
