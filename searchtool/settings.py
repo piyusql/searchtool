@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # own written django apps
+    'engine',
 ]
 
 MIDDLEWARE = [
@@ -109,3 +111,7 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+
+# Search API Keys
+
+GOOGLE_CUSTOM_SEARCH_API_KEY = 'AIzaSyCZbmHQ-qfQcas9_0B86_JCLOoXc4H-Vvk'

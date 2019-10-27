@@ -1,11 +1,12 @@
 from django.db import models
 
+
 class SearchHistory(models.Model):
     FRESH = 0
     QUEUED = 1
     STARTED = 2
     ERROR = 3
-    FINISHED = 4
+    COMPLETED = 4
     PARTIAL_COMPLETED = 5
 
     QUERY_STATUS_CHOICES = [
@@ -13,7 +14,7 @@ class SearchHistory(models.Model):
         (QUEUED, 'Queued'),
         (STARTED, 'Started'),
         (ERROR, 'Error'),
-        (FINISHED, 'Finished'),
+        (COMPLETED, 'Completed'),
         (PARTIAL_COMPLETED, 'Partial'),
     ]
 
@@ -24,12 +25,13 @@ class SearchHistory(models.Model):
 
 
 class SearchResult(models.Model):
-    # Either we should take 3 different table for 3 searches data to store or 
+    # Either we should take 3 different table for 3 searches data to store or
     # we can just make columns to store different data.
-    # If we will search for all available engines everytime, its OK to store 
-    # the data in a single table, insert race conditions we will care using cache.
-    search = models.ForeignKey(SearchHistory)
-    google_search_result = models.TextField()
-    duckduckgo_search_result = models.TextField()
-    wikipedia_search_result = models.TextField()
-    
+    # If we will search for all available engines everytime, its OK to store
+    # the data in a single table, insert race conditions we will care using
+    # cache.
+    search = models.ForeignKey(SearchHistory, on_delete=models.CASCADE)
+    google = models.TextField()
+    duckduckgo = models.TextField()
+    wikipedia = models.TextField()
+    completed_at = models.DateTimeField(auto_now=True)
