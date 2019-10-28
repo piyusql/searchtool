@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '#c2gvn9#6g*(2n#=20x^g4yg*$xt%$2xcl^fg+p!+bj#)w4fxe'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'searchtool',
         'USER': 'barron',
         'PASSWORD': 'gre@3499',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
     }
 }
 
@@ -106,8 +106,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Celery application definition
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+REDIS_SERVER = os.environ.get('REDIS_SERVER', 'localhost:6379')
+CELERY_BROKER_URL = 'redis://%s' %(REDIS_SERVER)
+CELERY_RESULT_BACKEND = 'redis://%s' %(REDIS_SERVER)
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'

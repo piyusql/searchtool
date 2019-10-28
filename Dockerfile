@@ -13,7 +13,8 @@ RUN yum install -y epel-release && \
         nginx uwsgi-plugin-common \
         openssl-devel openldap-devel postgresql-devel bzip2-devel libffi-devel && \
 	chmod a+x py3-installer.sh && \
-        bash -x py3-installer.sh
+        bash -x py3-installer.sh && \
+    yum clean all
 
 ADD requirements.txt /
 

@@ -6,7 +6,7 @@ services:
     environment:
       - DB_HOST=st_db
       - DB_NAME=searchtool
-      - REDIS=st_redis:6379
+      - REDIS_SERVER=st_redis:6379
       - DEBUG=1
     ports:
       - "8080:8000"
