@@ -1,0 +1,37 @@
+version: "2.3"
+services:
+  st_site:
+    image: searchtool:latest
+    build: .
+    environment:
+      - DB_HOST=st_db
+      - DB_NAME=searchtool
+      - REDIS=st_redis:6379
+      - DEBUG=1
+    ports:
+      - "8080:8000"
+    depends_on:
+      - "st_redis"
+      - "st_db"
+    links:
+        - "st_db:st_db_localhost"
+        - "st_redis:st_redis_localhost"
+    networks:
+      - backend
+  st_db:
+    image: postgres:11.3
+    environment:
+      - POSTGRES_DB=searchtool
+      - POSTGRES_USER=barron
+      - POSTGRES_PASSWORD=gre@3499
+    ports:
+      - "5433:5432"
+    networks:
+      - backend
+  st_redis:
+    image: redis:alpine
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
