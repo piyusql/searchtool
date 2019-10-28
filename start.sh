@@ -1,21 +1,12 @@
 #!/bin/bash
 
-# DATABASE specific variables from env
-
+# some of the env needed
 APP_NAME="${APP_NAME:-searchtool}"
-
-DB_NAME="${DB_NAME:-searchtool}"
-DB_USER="${DB_USER:-searchtool}"
-DB_PASSWORD="${DB_PASSWORD:-searchtool}"
-DB_HOST="${DB_HOST:-localhost}"
-DB_PORT="${DB_PORT:-5432}"
-MEMCACHED="${MEMCACHED:-memcached:11211}"
-
-mkdir -p /piyusg/code /piyusg/service/logs
-
 APP_DIR=/piyusg/code/searchtool
 STATIC_DIR=${APP_DIR}/static
 MEDIA_DIR=${APP_DIR}/media
+
+mkdir -p /piyusg/code /piyusg/service/logs
 
 echo "Configuring the weservice to run with uwsgi+nginx..."
 cp ${APP_DIR}/conf/searchtool.conf /etc/nginx/conf.d/searchtool.conf
