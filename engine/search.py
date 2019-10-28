@@ -16,7 +16,7 @@ class SearchType:
 def execute_search(q):
     # do parallel search for 3 search engines
     sh = SearchHistory.objects.create(query=q)
-    print('Query-id: %d, looking for %s' % (sh.id, q))
+    # print('Query-id: %d, looking for %s' % (sh.id, q))
     wiki_search(sh.id, q)
     return sh.id
 
