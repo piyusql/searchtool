@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Search history{% endblock %}
+{% block header %} {% endblock %}
+{% block content %}
+  <h3>Page2: Last 10 searches...</h3>
+  <table border="1">
+    <tr>
+        <td>search_id</td>
+        <td>query</td>
+        <td>timestamp</td>
+        <td>status</td>
+    </tr>      
+    {% for record in latest_searches %}
+    <tr>
+        <td>{{record.id}}</td>
+        <td>{{record.query}}</td>
+        <td>{{record.started_at}}</td>
+        <td>{{record.get_status_display}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
