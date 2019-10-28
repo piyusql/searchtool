@@ -4,6 +4,7 @@ billiard==3.6.1.0
 celery==4.3.0
 certifi==2019.9.11
 chardet==3.0.4
+coverage==4.5.4
 Django==2.2.6
 gevent==1.4.0
 greenlet==0.4.15

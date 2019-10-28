@@ -107,8 +107,8 @@ STATIC_URL = '/static/'
 
 # Celery application definition
 REDIS_SERVER = os.environ.get('REDIS_SERVER', 'localhost:6379')
-CELERY_BROKER_URL = 'redis://%s' %(REDIS_SERVER)
-CELERY_RESULT_BACKEND = 'redis://%s' %(REDIS_SERVER)
+BROKER_URL = os.environ.get('BROKER_SERVER')
+CELERY_RESULT_BACKEND = 'redis://%s' % (REDIS_SERVER)
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
