@@ -32,6 +32,18 @@ services:
     image: redis:alpine
     networks:
       - backend
+  st_rabbitmq:
+    image: rabbitmq
+    healthcheck:
+      timeout: 5s
+      interval: 5s
+      retries: 3
+      test:
+        - "CMD"
+        - "rabbitmqctl"
+        - "status"
+    networks:
+      - backend
 networks:
   backend:
     driver: bridge
