@@ -2,7 +2,6 @@ from django.db import models
 
 
 class SearchHistory(models.Model):
-    FRESH = 0
     QUEUED = 1
     STARTED = 2
     ERROR = 3
@@ -10,7 +9,6 @@ class SearchHistory(models.Model):
     PARTIAL_COMPLETED = 5
 
     QUERY_STATUS_CHOICES = [
-        (FRESH, 'Fresh'),
         (QUEUED, 'Queued'),
         (STARTED, 'Started'),
         (ERROR, 'Error'),
@@ -21,7 +19,14 @@ class SearchHistory(models.Model):
     query = models.TextField()
     started_at = models.DateTimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(choices=QUERY_STATUS_CHOICES,
-                                              default=FRESH)
+                                              default=QUEUED)
+
+    @property
+    def result(self):
+        try:
+            SearchResult.objects.filter(search=self)[0]
+        except IndexError:
+            return None
 
 
 class SearchResult(models.Model):

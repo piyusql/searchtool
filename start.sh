@@ -10,7 +10,7 @@ mkdir -p /piyusg/code /piyusg/service/logs
 
 # run the db sync if need it will create tables
 cd ${APP_DIR}
-python manage.py migrate
+python3 manage.py migrate
 
 echo "Configuring the weservice to run with uwsgi+nginx..."
 cp ${APP_DIR}/conf/searchtool.conf /etc/nginx/conf.d/searchtool.conf

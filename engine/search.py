@@ -28,16 +28,8 @@ def execute_search(q):
 
 
 def parsed_content(search_type, response):
-    if search_type == SearchType.WIKIPEDIA:
-        resp = json.loads(response.content)
-        return resp['query']['search']
-    elif search_type == SearchType.GOOGLE:
-        resp = json.loads(response.content)
-        return resp['query']['search']
-    elif search_type == SearchType.DUCKDUCKGO:
-        resp = json.loads(response.content)
-        return resp['']
-    return response
+    resp = json.loads(response.content)
+    return resp
 
 
 def save_search_data(search_id, search_type, data):
@@ -50,7 +42,7 @@ def save_search_data(search_id, search_type, data):
     # will write to the db if all other searches also finished.
     cache.set(cache_keygen(search_type), data, 60 * 60)
     data_dict = dict([(search_type, cache.get(cache_keygen(search_type)))
-                      for search_type in (SearchType.WIKIPEDIA)])  # GOOGLE, SearchType.DUCKDUCKGO, SearchType.WIKIPEDIA)]
+                      for search_type in (SearchType.GOOGLE, SearchType.DUCKDUCKGO, SearchType.WIKIPEDIA)])
     if all(data_dict.values()):
         # write the data to the disk now
         sr = SeachResult.objects.get(search_id=search_id)
@@ -65,18 +57,25 @@ def save_search_data(search_id, search_type, data):
     return
 
 
+def api_caller(search_type, search_id, url, params):
+    try:
+        response = requests.get(url, params)
+    except Exception as exc:
+        response = json.dumps({'status': 'error', 'message': str(exc)})
+    save_search_data(
+        search_id,
+        search_type,
+        parsed_content(
+            search_type, response))
+
+
 def google_search(search_id, q):
     params = {'key': settings.GOOGLE_CUSTOM_SEARCH_API_KEY,
               'cx': '017576662512468239146:omuauf_lfve',
-              'q': q, }
+              'q': q,
+              'num': 10, }
     api_url = "https://www.googleapis.com/customsearch/v1"
-    response = requests.get(api_url, params)
-    save_search_data(
-        search_id,
-        SearchType.GOOGLE,
-        parsed_content(
-            SearchType.GOOGLE,
-            response))
+    api_caller(SearchType.GOOGLE, search_id, api_url, params)
 
 
 def duckduckgo_search(search_id, q):
@@ -84,13 +83,7 @@ def duckduckgo_search(search_id, q):
               'pretty': 1,
               'q': q, }
     api_url = "https://api.duckduckgo.com/"
-    response = requests.get(api_url, params)
-    save_search_data(
-        search_id,
-        SearchType.DUCKDUCKGO,
-        parsed_content(
-            SearchType.DUCKDUCKGO,
-            response))
+    api_caller(SearchType.DUCKDUCKGO, search_id, api_url, params)
 
 
 def wiki_search(search_id, q):
@@ -101,18 +94,14 @@ def wiki_search(search_id, q):
         "list": "search",
         "srsearch": q,
     }
-    response = requests.get(url=api_url, params=params)
-    save_search_data(
-        search_id,
-        SearchType.WIKIPEDIA,
-        parsed_content(
-            SearchType.WIKIPEDIA,
-            response))
+    api_caller(SearchType.WIKIPEDIA, search_id, api_url, params)
 
 
 @app.task(bind=True)
-def start_searching(search_id, q):
+def start_searching(self, search_id, q):
     threads = []
+    SearchHistory.objects.filter(id=search_id).update(
+        status=SearchHistory.STARTED)
     for func in (google_search, duckduckgo_search, wiki_search):
         t = threading.Thread(target=func, args=(search_id, q,))
         threads.append(t)

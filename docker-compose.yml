@@ -30,6 +30,8 @@ services:
       - backend
   st_redis:
     image: redis:alpine
+    depends_on:
+      - "st_rabbitmq"
     networks:
       - backend
   st_rabbitmq:

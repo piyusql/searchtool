@@ -6,9 +6,11 @@ from engine.search import execute_search
 
 def home(request):
     q = request.GET.get('q')
+    data = {}
     if q:
         search_id = execute_search(q)
-    return render(request, 'engine/search.html')
+        data = {'search_id': search_id}
+    return render(request, 'engine/search.html', data)
 
 
 def dashboard(request):

@@ -10,6 +10,9 @@
         <td>query</td>
         <td>timestamp</td>
         <td>status</td>
+        <td>Google Data</td>
+        <td>DuckDuckGo Data</td>
+        <td>Wiki Data</td>
     </tr>      
     {% for record in latest_searches %}
     <tr>
@@ -17,6 +20,9 @@
         <td>{{record.query}}</td>
         <td>{{record.started_at}}</td>
         <td>{{record.get_status_display}}</td>
+        <td>{{record.result.google}}</td>
+        <td>{{record.result.duckduckgo}}</td>
+        <td>{{record.result.wikipedia}}</td>
     </tr>
     {% endfor %}
   </table>

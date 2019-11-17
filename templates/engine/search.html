@@ -3,9 +3,14 @@
 {% block title %}Search your query{% endblock %}
 {% block header %} {% endblock %}
 {% block content %}
-<h3>Enter your text here...
-  <form action="." name="search" method="get">{% csrf_token %}
-  <input name="q" type="text" width="50"></input>
-  <button type="submit">Search</button>
-  </form>
+{% if search_id %}
+  <h3> Search ID {{search_id}} is in progress</h3>
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+{% else %}
+  <h3>Enter your text here...
+    <form action="." name="search" method="get">{% csrf_token %}
+        <input name="q" type="text" width="50"></input>
+        <button type="submit">Search</button>
+    </form>
+{% endif %}
 {% endblock %}
