@@ -24,8 +24,8 @@ class SearchHistory(models.Model):
     @property
     def result(self):
         try:
-            SearchResult.objects.filter(search=self)[0]
-        except IndexError:
+            return SearchResult.objects.get(search=self)
+        except SearchResult.DoesNotExist:
             return None
 
 

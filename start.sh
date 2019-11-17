@@ -12,14 +12,18 @@ mkdir -p /piyusg/code /piyusg/service/logs
 cd ${APP_DIR}
 python3 manage.py migrate
 
-echo "Configuring the weservice to run with uwsgi+nginx..."
-cp ${APP_DIR}/conf/searchtool.conf /etc/nginx/conf.d/searchtool.conf
-sed -i '1i daemon off;' /etc/nginx/nginx.conf
-
-uwsgi --ini ${APP_DIR}/conf/uwsgi.ini &
-
-# forward nginx request and error logs to docker log collector
-ln -sf /dev/stdout /var/log/nginx/access.log
-ln -sf /dev/stderr /var/log/nginx/error.log
-
-exec nginx
+if [[ "${CELERY_JOB}" ]]; then
+    echo "Starting up the celery job..."
+    cd ${APP_DIR}
+    celery -A searchtool worker -l info
+else
+    echo "Configuring the weservice to run with uwsgi+nginx..."
+    cp ${APP_DIR}/conf/searchtool.conf /etc/nginx/conf.d/searchtool.conf
+    sed -i '1i daemon off;' /etc/nginx/nginx.conf
+    uwsgi --ini ${APP_DIR}/conf/uwsgi.ini &
+    # forward nginx request and error logs to docker log collector
+    ln -sf /dev/stdout /var/log/nginx/access.log
+    ln -sf /dev/stderr /var/log/nginx/error.log
+    exec nginx
+fi
+# EOF    

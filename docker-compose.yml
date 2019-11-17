@@ -7,12 +7,28 @@ services:
       - DB_HOST=st_db
       - DB_NAME=searchtool
       - REDIS_SERVER=st_redis:6379
-      - DEBUG=1
+      - BROKER_SERVER=st_rabbitmq
+      - ALLOWED_HOSTS=localhost
     ports:
       - "8080:8000"
     depends_on:
       - "st_redis"
       - "st_db"
+    links:
+        - "st_db:st_db_localhost"
+        - "st_redis:st_redis_localhost"
+    networks:
+      - backend
+  st_celery:
+    image: searchtool:latest
+    environment:
+      - DB_HOST=st_db
+      - DB_NAME=searchtool
+      - REDIS_SERVER=st_redis:6379
+      - BROKER_SERVER=st_rabbitmq
+      - CELERY_JOB=1
+    depends_on:
+      - "st_site"
     links:
         - "st_db:st_db_localhost"
         - "st_redis:st_redis_localhost"

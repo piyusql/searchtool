@@ -45,10 +45,11 @@ def save_search_data(search_id, search_type, data):
                       for search_type in (SearchType.GOOGLE, SearchType.DUCKDUCKGO, SearchType.WIKIPEDIA)])
     if all(data_dict.values()):
         # write the data to the disk now
-        sr = SeachResult.objects.get(search_id=search_id)
-        sr.update(data_dict)
+        sr, _ = SearchResult.objects.get_or_create(search_id=search_id)
+        for key, value in data_dict.items():
+            setattr(sr, key, value)
         # update the status of the main table
-        sr.search.status = 'COMPLETED'
+        sr.search.status = SearchHistory.COMPLETED
         sr.search.save()
         sr.save()
     else:

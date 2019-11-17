@@ -15,4 +15,5 @@ def home(request):
 
 def dashboard(request):
     latest_searches = SearchHistory.objects.all().order_by('-id')[:10]
-    return render(request, 'engine/dashboard.html', {'latest_searches': latest_searches})
+    return render(request, 'engine/dashboard.html',
+                  {'latest_searches': latest_searches})
