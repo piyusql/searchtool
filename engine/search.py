@@ -52,8 +52,11 @@ def save_search_data(search_id, search_type, data):
         sr.search.status = SearchHistory.COMPLETED
         sr.search.save()
         sr.save()
+        logger.info("Search-ID-%d Completed with last execution %s" %
+                    (search_id, search_type))
     else:
-        pass
+        logger.info("Search-ID-%d In-Progress with current execution %s" %
+                    (search_id, search_type))
         # it will come again till all other search completes.
     return
 
