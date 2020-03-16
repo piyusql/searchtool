@@ -80,7 +80,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'searchtool',
         'USER': 'barron',
-        'PASSWORD': 'gre@3499',
+        'PORT': '5432',
+        'PASSWORD': 'gre3499',
         'HOST': os.environ.get('DB_HOST', 'localhost'),
     }
 }

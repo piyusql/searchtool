@@ -4,25 +4,24 @@ services:
     image: searchtool:latest
     build: .
     environment:
-      - DB_HOST=st_db
-      - DB_NAME=searchtool
+      - DB_HOST=st_db_pb
       - REDIS_SERVER=st_redis:6379
       - BROKER_SERVER=st_rabbitmq
       - ALLOWED_HOSTS=localhost
     ports:
       - "8080:8000"
     depends_on:
+      - "st_db_pb"
       - "st_redis"
-      - "st_db"
     links:
-        - "st_db:st_db_localhost"
+        - "st_db_pb:st_db_pb_localhost"
         - "st_redis:st_redis_localhost"
     networks:
       - backend
   st_celery:
     image: searchtool:latest
     environment:
-      - DB_HOST=st_db
+      - DB_HOST=st_db_pb
       - DB_NAME=searchtool
       - REDIS_SERVER=st_redis:6379
       - BROKER_SERVER=st_rabbitmq
@@ -30,8 +29,21 @@ services:
     depends_on:
       - "st_site"
     links:
-        - "st_db:st_db_localhost"
+        - "st_db_pb:st_db_pb_localhost"
         - "st_redis:st_redis_localhost"
+    networks:
+      - backend
+  st_db_pb:
+    image: edoburu/pgbouncer
+    environment:
+      - DB_USER=barron
+      - DB_PASSWORD=gre3499
+      - DB_HOST=st_db
+      - DB_NAME=searchtool
+    ports:
+      - "6432:5432"
+    depends_on:
+      - "st_db"
     networks:
       - backend
   st_db:
@@ -39,14 +51,20 @@ services:
     environment:
       - POSTGRES_DB=searchtool
       - POSTGRES_USER=barron
-      - POSTGRES_PASSWORD=gre@3499
+      - POSTGRES_PASSWORD=gre3499
     ports:
-      - "5433:5432"
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "until pg_isready -U searchtool"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - backend
   st_redis:
     image: redis:alpine
     depends_on:
+      - "st_db_pb"
       - "st_rabbitmq"
     networks:
       - backend

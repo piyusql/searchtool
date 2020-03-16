@@ -1,6 +1,6 @@
 import random
 
-from locust import HttpLocust, TaskSet, task
+from locust import between, HttpLocust, TaskSet, task
 
 
 def _get_all_search_strings(_file_path):
@@ -42,5 +42,4 @@ class SearchToolLoadTest(TaskSet):
 
 class WebsiteUser(HttpLocust):
     task_set = SearchToolLoadTest
-    min_wait = 5000
-    max_wait = 10000
+    wait_time = between(5, 10)

@@ -28,7 +28,11 @@ def execute_search(q):
 
 
 def parsed_content(search_type, response):
-    resp = json.loads(response.content)
+    if response.status_code in (200, 201):
+        resp = json.loads(response.content)
+    else:
+        resp = {'status_code': response.status_code,
+                'message': str(response)}
     return resp
 
 
